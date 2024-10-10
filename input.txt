@@ -1,15 +1,3 @@
-#include <stdio.h>
-#define MAX_INT 23
-
-
-
-
-
-
-
-
-
-
 
 int main()
 {
@@ -18,29 +6,23 @@ int main()
 	num1=5;
 	num2=6;
 	num3=4;
-	if( num1 < num2 )//a<b时候，最大值暂定为b
+	if( num1 < num2 )
 	{
 		max = num2;
 	}
-	else if( num1 < num3 )/*a>b且a<c时候，最大值为c
-	*/
+	else if( num1 < num3 )
 	{
 		max = num3;
 	}
-		else /*a>b且a>c时候，\\最大值为a
-	*/
+		else 
 		{
 			max = num1;
 		}
-	if(num2 < num3)/*a<b且b<c时候，\*最大值为c
-	
-	*/
+	if(num2 < num3)
 	{
 		max = num3;
 	}
-	else/*a<b且b<c时候，"最大值为c"
-	
-	*/
+	else
 	{
 			max = num2;
 			MAX_INT;

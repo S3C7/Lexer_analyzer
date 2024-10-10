@@ -15,11 +15,11 @@ enum class TokenType {
     // 普通界符
     COMMA,
     // 保留字
-    PRINT,
+    PRINT, INT, FLOAT,
     // 标识符
     IDENTIFIER,
     // 运算符
-    PLUS, MINUS, MUL, DIV, EQUAL,
+    PLUS, MINUS, MUL, DIV, EQUAL, LESS, GREATER, LEQ, GEQ,
     // 字面量
     INTEGER, FLOAT, STRING,
     // 其他
@@ -37,6 +37,7 @@ struct Token {
 class Lexer {
 public:
     explicit Lexer(const std::string& source);
+    Token scanSingleCharToken();
     Token getNextToken();
 
 private:
@@ -51,6 +52,7 @@ private:
     // 辅助方法
     char getCurrentChar() const;
     char advance();
+    char peekNext() const;
     bool isAtEnd() const;
     void skipWhitespace();
 

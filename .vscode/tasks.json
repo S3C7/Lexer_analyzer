@@ -11,6 +11,7 @@
                 "-fexec-charset=UTF-8",
                 "${workspaceFolder}\\src\\main.cpp",
                 "${workspaceFolder}\\src\\lexer.cpp",
+                "${workspaceFolder}\\src\\handler.cpp",
                 "-o",
                 "lexer"
             ],

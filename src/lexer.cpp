@@ -14,10 +14,28 @@ const std::unordered_map<std::string, TokenType> Lexer::operators = {
     {"-", TokenType::MINUS},
     {"*", TokenType::MUL},
     {"/", TokenType::DIV},
-    {"=", TokenType::EQUAL}
+    {"=", TokenType::EQUAL},
+    {"<", TokenType::LESS},
+    {">", TokenType::GREATER},
+    {"<=", TokenType::LEQ},
+    {">=", TokenType::GEQ}
 };
 
 Lexer::Lexer(const std::string& source) : source(source), position(0), line(1), column(0) {}
+
+Token Lexer::scanSingleCharToken() {
+    char current = getCurrentChar();
+    int startColumn = column;
+    switch (current) {
+        case '(': advance(); return Token{TokenType::LEFT_PAREN, "(", line, startColumn};
+        case ')': advance(); return Token{TokenType::RIGHT_PAREN, ")", line, startColumn};
+        case '{': advance(); return Token{TokenType::LEFT_BRACE, "{", line, startColumn};
+        case '}': advance(); return Token{TokenType::RIGHT_BRACE, "}", line, startColumn};
+        case ';': advance(); return Token{TokenType::SEMICOLON, ";", line, startColumn};
+        case ',': advance(); return Token{TokenType::COMMA, ",", line, startColumn};
+        default: return Token{TokenType::END_OF_FILE, "", line, startColumn}; // 表示没有匹配到单字符标记
+    }
+}
 
 Token Lexer::getNextToken() {
     skipWhitespace();
@@ -41,15 +59,32 @@ Token Lexer::getNextToken() {
         return scanNumber();
     }
 
-    switch (current) {
-        case '(': advance(); return Token{TokenType::LEFT_PAREN, "(", line, startColumn};
-        case ')': advance(); return Token{TokenType::RIGHT_PAREN, ")", line, startColumn};
-        case '{': advance(); return Token{TokenType::LEFT_BRACE, "{", line, startColumn};
-        case '}': advance(); return Token{TokenType::RIGHT_BRACE, "}", line, startColumn};
-        case ';': advance(); return Token{TokenType::SEMICOLON, ";", line, startColumn};
-        case ',': advance(); return Token{TokenType::COMMA, ",", line, startColumn};
+    Token singleCharToken = scanSingleCharToken();
+    if (singleCharToken.type != TokenType::END_OF_FILE) {
+        return singleCharToken;
     }
 
+    // 处理 < 和 > 运算符
+    switch (current) {
+        case '<':
+            if (peekNext() == '=') {
+                advance(); advance();
+                return Token{TokenType::LEQ, "<=", line, startColumn};
+            } else {
+                advance();
+                return Token{TokenType::LESS, "<", line, startColumn};
+            }
+        case '>':
+            if (peekNext() == '=') {
+                advance(); advance();
+                return Token{TokenType::GEQ, ">=", line, startColumn};
+            } else {
+                advance();
+                return Token{TokenType::GREATER, ">", line, startColumn};
+            }
+    }
+
+    // 处理其他运算符
     std::string op(1, current);
     advance();
     auto it = operators.find(op);
@@ -57,7 +92,9 @@ Token Lexer::getNextToken() {
         return Token{it->second, op, line, startColumn};
     }
 
-    throw std::runtime_error("Unexpected character: " + std::string(1, current));
+    throw std::runtime_error("Unexpected character at line " + std::to_string(line) + 
+                             ", column " + std::to_string(startColumn) + 
+                             ": " + std::string(1, current));
 }
 
 Token Lexer::scanIdentifier() {
@@ -107,7 +144,8 @@ Token Lexer::scanString() {
     }
 
     if (isAtEnd()) {
-        throw std::runtime_error("Unterminated string at line " + std::to_string(line) + ", column " + std::to_string(startColumn));
+        throw std::runtime_error("Unterminated string at line " + std::to_string(line) 
+                + ", column " + std::to_string(startColumn));
     }
 
     lexeme += advance(); // 添加结束的双引号
@@ -128,6 +166,13 @@ char Lexer::advance() {
         column = 0;
     }
     return current;
+}
+
+char Lexer::peekNext() const {
+    if (position + 1 >= source.length()) {
+        return '\0';  // 如果已经到达字符串末尾，返回空字符
+    }
+    return source[position + 1];  // 返回下一个字符，但不改变位置
 }
 
 bool Lexer::isAtEnd() const {
@@ -170,6 +215,10 @@ std::string getTokenTypeName(TokenType type) {
         case TokenType::MUL: return "MUL";
         case TokenType::DIV: return "DIV";
         case TokenType::EQUAL: return "EQUAL";
+        case TokenType::LESS: return "LESS";
+        case TokenType::GREATER: return "GREATER";
+        case TokenType::LEQ: return "LEQ";
+        case TokenType::GEQ: return "GEQ";
         case TokenType::INTEGER: return "INTEGER";
         case TokenType::FLOAT: return "FLOAT";
         case TokenType::STRING: return "STRING";
