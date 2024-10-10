@@ -15,7 +15,7 @@ enum class TokenType {
     // 普通界符
     COMMA,
     // 保留字
-    PRINT, INT, FLOAT,
+    PRINT, INT, MAIN, RETURN, VOID, WHILE, FOR,
     // 标识符
     IDENTIFIER,
     // 运算符

@@ -37,8 +37,8 @@ void Handler::processContent() {
         // 可以选择在这里清空tokens或者保留已经识别的部分
         // tokens.clear();
     }
-
     printTokens();
+    printTokensToFile();
 }
 
 const std::vector<Token>& Handler::getTokens() const {

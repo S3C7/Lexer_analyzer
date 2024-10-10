@@ -18,10 +18,15 @@ public:
     // 获取处理后的词法单元
     const std::vector<Token>& getTokens() const;
 
+
+
 private:
     // 打印词法单元列表
     void printTokens() const;
 
+    // 将词法单元写入文件
+    void printTokensToFile() const;
+    
     std::string content;  // 存储文件内容
     std::vector<Token> tokens;  // 存储词法单元
 };
