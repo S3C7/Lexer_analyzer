@@ -6,7 +6,16 @@
 const std::unordered_map<std::string, TokenType> Lexer::keywords = {
     {"if", TokenType::IF},
     {"then", TokenType::THEN},
-    {"else", TokenType::ELSE}
+    {"else", TokenType::ELSE},
+    {"int", TokenType::INT},
+    {"float", TokenType::FLOAT},
+    {"string", TokenType::STRING},
+    {"print", TokenType::PRINT},
+    {"return", TokenType::RETURN},
+    {"void", TokenType::VOID},
+    {"while", TokenType::WHILE},
+    {"for", TokenType::FOR},
+    {"main", TokenType::MAIN},
 };
 
 const std::unordered_map<std::string, TokenType> Lexer::operators = {
@@ -202,13 +211,19 @@ std::string getTokenTypeName(TokenType type) {
         case TokenType::IF: return "IF";
         case TokenType::THEN: return "THEN";
         case TokenType::ELSE: return "ELSE";
+        case TokenType::INT: return "INT";
+        case TokenType::PRINT: return "PRINT";
+        case TokenType::RETURN: return "RETURN";
+        case TokenType::VOID: return "VOID";
+        case TokenType::WHILE: return "WHILE";
+        case TokenType::FOR: return "FOR";
+        case TokenType::MAIN: return "MAIN";
         case TokenType::LEFT_PAREN: return "LEFT_PAREN";
         case TokenType::RIGHT_PAREN: return "RIGHT_PAREN";
         case TokenType::LEFT_BRACE: return "LEFT_BRACE";
         case TokenType::RIGHT_BRACE: return "RIGHT_BRACE";
         case TokenType::SEMICOLON: return "SEMICOLON";
         case TokenType::COMMA: return "COMMA";
-        case TokenType::PRINT: return "PRINT";
         case TokenType::IDENTIFIER: return "IDENTIFIER";
         case TokenType::PLUS: return "PLUS";
         case TokenType::MINUS: return "MINUS";

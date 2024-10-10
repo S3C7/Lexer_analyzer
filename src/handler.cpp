@@ -9,7 +9,7 @@ Handler::Handler() {}
 bool Handler::openFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "无法打开文件: " << filename << std::endl;
+        std::cerr << "Unable to open file: " << filename << std::endl;
         return false;
     }
 
@@ -33,7 +33,7 @@ void Handler::processContent() {
             }
         }
     } catch (const std::runtime_error& e) {
-        std::cerr << "词法分析错误: " << e.what() << std::endl;
+        std::cerr << "Lexical analysis error: " << e.what() << std::endl;
         // 可以选择在这里清空tokens或者保留已经识别的部分
         // tokens.clear();
     }
@@ -47,9 +47,26 @@ const std::vector<Token>& Handler::getTokens() const {
 
 void Handler::printTokens() const {
     for (const auto& token : tokens) {
-        std::cout << "类型: " << getTokenTypeName(token.type)
-                  << ", 词素: " << token.lexeme
-                  << ", 行: " << token.line
-                  << ", 列: " << token.column << std::endl;
+        std::cout << "Type: " << getTokenTypeName(token.type)
+                  << ", Lexeme: " << token.lexeme
+                  << ", Line: " << token.line
+                  << ", Column: " << token.column << std::endl;
     }
+
 }
+
+void Handler::printTokensToFile() const {
+    std::ofstream outFile("output/tokens.txt");
+    if (!outFile.is_open()) {
+        std::cerr << "Unable to open output file: tokens.txt" << std::endl;
+        return;
+    }
+
+    for (const auto& token : tokens) {
+        outFile << "<" << getTokenTypeName(token.type) << ", "
+                << token.lexeme << ">" << std::endl;
+    }
+
+    outFile.close();
+}   
+

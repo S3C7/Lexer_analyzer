@@ -4,7 +4,7 @@
 #include "lexer.h"
 
 int main() {
-    std::string source = "if (x + y) then z = x * y else z = x / y; print (\"hello world\");";
+    //std::string source = "if (x + y) then z = x * y else z = x / y; print (\"hello world\");";
     // Lexer lexer(source);
 
     // Token token;
