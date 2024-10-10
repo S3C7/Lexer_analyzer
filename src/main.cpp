@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
-#include "lexer.h"  
+#include "lexer.h"
 
 int main() {
-    std::string source = "if (x + y) then z = x * y else z = x / y";
+    std::string source = "if (x + y) then z = x * y else z = x / y;";
     Lexer lexer(source);
 
     Token token;

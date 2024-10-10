@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Lexer",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-I.\\libs",
+                "-finput-charset=UTF-8",
+                "-fexec-charset=UTF-8",
+                "${workspaceFolder}\\src\\main.cpp",
+                "${workspaceFolder}\\src\\lexer.cpp",
+                "-o",
+                "lexer"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "编译词法分析器项目"
+        },
+        {
+            "label": "Run Lexer",
+            "type": "shell",
+            "command": "${workspaceFolder}\\lexer",
+            "args": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": "Build Lexer",
+            "problemMatcher": []
+        }
+    ]
+}
