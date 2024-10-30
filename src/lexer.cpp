@@ -32,6 +32,7 @@ const std::unordered_map<std::string, TokenType> Lexer::operators = {
 
 Lexer::Lexer(const std::string& source) : source(source), position(0), line(1), column(0) {}
 
+// 扫描单字符（括号、分号、逗号）标记
 Token Lexer::scanSingleCharToken() {
     char current = getCurrentChar();
     int startColumn = column;
@@ -46,6 +47,7 @@ Token Lexer::scanSingleCharToken() {
     }
 }
 
+// 获取下一个Token，状态转移
 Token Lexer::getNextToken() {
     skipWhitespace();
     
@@ -106,26 +108,29 @@ Token Lexer::getNextToken() {
                              ": " + std::string(1, current));
 }
 
+// 扫描标识符
 Token Lexer::scanIdentifier() {
     int startColumn = column;
     std::string lexeme;
+    // 扫描标识符，状态停止的标识为EOF或非字母数字
     while (!isAtEnd() && isAlphaNumeric(getCurrentChar())) {
         lexeme += advance();
     }
-
+    // 检查是否为关键字
     auto it = keywords.find(lexeme);
     if (it != keywords.end()) {
         return Token{it->second, lexeme, line, startColumn};
     }
-
+    // 否则，返回标识符
     return Token{TokenType::IDENTIFIER, lexeme, line, startColumn};
 }
 
+// 扫描数字
 Token Lexer::scanNumber() {
     int startColumn = column;
     std::string lexeme;
     bool isFloat = false;
-
+    // 扫描数字，状态停止的标识为EOF或非数字
     while (!isAtEnd() && (isDigit(getCurrentChar()) || getCurrentChar() == '.')) {
         if (getCurrentChar() == '.') {
             if (isFloat) {
@@ -135,16 +140,18 @@ Token Lexer::scanNumber() {
         }
         lexeme += advance();
     }
-
+    // 根据是否为浮点数返回不同的Token类型
     TokenType type = isFloat ? TokenType::FLOAT : TokenType::INTEGER;
     return Token{type, lexeme, line, startColumn};
 }
 
+// 扫描字符串
 Token Lexer::scanString() {
     int startColumn = column;
     std::string lexeme = "\"";
     advance(); // 跳过开始的双引号
 
+    // 扫描字符串，状态停止的标识为EOF或非双引号
     while (!isAtEnd() && getCurrentChar() != '"') {
         if (getCurrentChar() == '\\') {
             lexeme += advance(); // 添加转义字符
@@ -152,6 +159,7 @@ Token Lexer::scanString() {
         lexeme += advance();
     }
 
+    // 如果字符串未正确结束，抛出错误
     if (isAtEnd()) {
         throw std::runtime_error("Unterminated string at line " + std::to_string(line) 
                 + ", column " + std::to_string(startColumn));
@@ -162,10 +170,12 @@ Token Lexer::scanString() {
     return Token{TokenType::STRING, lexeme, line, startColumn};
 }
 
+// 获取当前字符
 char Lexer::getCurrentChar() const {
     return isAtEnd() ? '\0' : source[position];
 }
 
+// 将目前的字符移动到下一个字符
 char Lexer::advance() {
     char current = getCurrentChar();
     position++;
@@ -177,6 +187,7 @@ char Lexer::advance() {
     return current;
 }
 
+// 查看下一个字符
 char Lexer::peekNext() const {
     if (position + 1 >= source.length()) {
         return '\0';  // 如果已经到达字符串末尾，返回空字符
@@ -184,28 +195,34 @@ char Lexer::peekNext() const {
     return source[position + 1];  // 返回下一个字符，但不改变位置
 }
 
+// 判断是否到达字符串末尾
 bool Lexer::isAtEnd() const {
     return position >= source.length();
 }
 
+// 跳过空白字符
 void Lexer::skipWhitespace() {
     while (!isAtEnd() && std::isspace(getCurrentChar())) {
         advance();
     }
 }
 
+// 判断是否为字母
 bool Lexer::isAlpha(char c) const {
     return std::isalpha(c) || c == '_';
 }
 
+// 判断是否为数字
 bool Lexer::isDigit(char c) const {
     return std::isdigit(c);
 }
 
+// 判断是否为字母或数字
 bool Lexer::isAlphaNumeric(char c) const {
     return isAlpha(c) || isDigit(c);
 }
 
+// 获取Token类型名称
 std::string getTokenTypeName(TokenType type) {
     switch (type) {
         case TokenType::IF: return "IF";
